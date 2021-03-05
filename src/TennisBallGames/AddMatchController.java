@@ -4,60 +4,77 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-/**
- * FXML Controller class
- *
- * @author Abdelkader
- */
-public class AddTeamController implements Initializable {
-
+// import the required libraries
+public class AddMatchController implements Initializable {
+    // Some @FXML declarations
     @FXML
     Button cancelBtn;
 
     @FXML
     Button saveBtn;
-    
+
+    // Some local variable declarations
     @FXML
-    TextField teamName;
+    ComboBox<String> homeTeamBox ;
+    @FXML
+    ComboBox<String> visitorTeamBox ;
 
+    // The data variable is used to populate the ComboBoxs
+    final ObservableList<String> data = FXCollections.observableArrayList();
+    // To reference the models inside the controller
+    private MatchesAdapter matchesAdapter;
     private TeamsAdapter teamsAdapter;
-
-    public void setModel(TeamsAdapter team) {
+    public void setModel(MatchesAdapter match, TeamsAdapter team) {
+        matchesAdapter = match;
         teamsAdapter = team;
+        buildComboBoxData();
     }
-
     @FXML
     public void cancel() {
+
         Stage stage = (Stage) cancelBtn.getScene().getWindow();
         stage.close();
     }
-
     @FXML
-    public void save() {
-        try {
-            teamsAdapter.insertTeam(teamName.getText());
-        } catch (SQLException ex) {
-            displayAlert("ERROR: " + ex.getMessage());
-        }
-            
+    public void save() throws SQLException {
+        // Do some work here
+        //try {
+            matchesAdapter.insertMatch(matchesAdapter.getMax(), homeTeamBox.getValue(), visitorTeamBox.getValue());
+       // } catch (SQLException ex) {
+           // displayAlert("ERROR: " + ex.getMessage());
+        //}
+
         Stage stage = (Stage) saveBtn.getScene().getWindow();
         stage.close();
     }
+    public void buildComboBoxData() {
+        try {
+            data.addAll(teamsAdapter.getTeamsNames());
+        } catch (SQLException ex) {
+            displayAlert("ERROR: " + ex.getMessage());
+        }
+    }
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
 
-     private void displayAlert(String msg) {
+        homeTeamBox.setItems(data);
+        visitorTeamBox.setItems(data);
+    }
+
+    private void displayAlert(String msg) {
         try {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Alert.fxml"));
@@ -77,13 +94,4 @@ public class AddTeamController implements Initializable {
 
         }
     }
-     
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }
-
 }

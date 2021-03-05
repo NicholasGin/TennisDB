@@ -87,17 +87,22 @@ public class TeamsAdapter {
         ObservableList<String> list = FXCollections.observableArrayList();
         ResultSet rs;
 
+
         // Create a Statement object
-        
+        Statement stmt = connection.createStatement();
 
         // Create a string with a SELECT statement
-        
+        String sql = "SELECT TeamName FROM Teams";
 
         // Execute the statement and return the result
-        
-        
+        rs = stmt.executeQuery(sql);
+
         // loop for the all rs rows and update list
-        
+
+        while(rs.next()) {
+            list.add(rs.getString("TeamName"));
+        }
+
         return list;
     }
 

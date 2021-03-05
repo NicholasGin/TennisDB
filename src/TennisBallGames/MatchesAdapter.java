@@ -51,10 +51,23 @@ public class MatchesAdapter {
         
     
     public int getMax() throws SQLException {
+
+        Statement stmt = connection.createStatement();
+        ResultSet rs;
+
         int num = 0;
 
         // Add your work code here for Task #3
-        
+        String sql = "SELECT MAX(MatchNumber) FROM Matches";
+
+        rs = stmt.executeQuery(sql);
+
+        while(rs.next()) {
+            num = rs.getInt(1);
+        }
+
+        num++;
+
         return num;
     }
     
