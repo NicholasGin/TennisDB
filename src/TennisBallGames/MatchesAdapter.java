@@ -49,7 +49,7 @@ public class MatchesAdapter {
             this.insertMatch(3, "Cubs", "Astros");
     }
         
-    
+    // gets the max value in the database and adds 1 to it
     public int getMax() throws SQLException {
 
         Statement stmt = connection.createStatement();
@@ -57,7 +57,6 @@ public class MatchesAdapter {
 
         int num = 0;
 
-        // Add your work code here for Task #3
         String sql = "SELECT MAX(MatchNumber) FROM Matches";
 
         rs = stmt.executeQuery(sql);
@@ -72,6 +71,7 @@ public class MatchesAdapter {
     }
     
     public void insertMatch(int num, String home, String visitor) throws SQLException {
+        // insert match into the DB
         Statement stmt = connection.createStatement();
         stmt.executeUpdate("INSERT INTO Matches (MatchNumber, HomeTeam, VisitorTeam, HomeTeamScore, VisitorTeamScore) "
                 + "VALUES (" + num + " , '" + home + "' , '" + visitor + "', 0, 0)");
@@ -123,7 +123,7 @@ public class MatchesAdapter {
         return list;
     }
     
-    
+    // sets the score of each team and update the DB
     public void setTeamsScore(int matchNumber, int hScore, int vScore) throws SQLException
    {
         Statement stmt = connection.createStatement();

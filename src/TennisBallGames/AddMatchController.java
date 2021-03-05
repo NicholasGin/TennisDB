@@ -43,23 +43,26 @@ public class AddMatchController implements Initializable {
         buildComboBoxData();
     }
     @FXML
+    // closes the tab when cancel button is pressed
     public void cancel() {
 
         Stage stage = (Stage) cancelBtn.getScene().getWindow();
         stage.close();
     }
     @FXML
-    public void save() throws SQLException {
-        // Do some work here
-        //try {
+    // saves information to the DB and closes the tab
+    public void save()  {
+
+        try {
             matchesAdapter.insertMatch(matchesAdapter.getMax(), homeTeamBox.getValue(), visitorTeamBox.getValue());
-       // } catch (SQLException ex) {
-           // displayAlert("ERROR: " + ex.getMessage());
-        //}
+        } catch (SQLException ex) {
+            displayAlert("ERROR: " + ex.getMessage());
+        }
 
         Stage stage = (Stage) saveBtn.getScene().getWindow();
         stage.close();
     }
+    //populates the combo box with the data from the DB
     public void buildComboBoxData() {
         try {
             data.addAll(teamsAdapter.getTeamsNames());
@@ -68,12 +71,14 @@ public class AddMatchController implements Initializable {
         }
     }
     @Override
+    // sets the combo box with data
     public void initialize(URL url, ResourceBundle rb) {
 
         homeTeamBox.setItems(data);
         visitorTeamBox.setItems(data);
     }
 
+    // opens a popup to display error message
     private void displayAlert(String msg) {
         try {
 

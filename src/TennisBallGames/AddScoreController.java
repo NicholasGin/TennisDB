@@ -22,7 +22,7 @@ import javafx.stage.Stage;
 public class AddScoreController implements Initializable {
 
 
-
+    //added fxml functionality
     @FXML
     Button cancelBtn;
 
@@ -48,21 +48,40 @@ public class AddScoreController implements Initializable {
         buildComboBoxData();
     }
 
+    // populates combo box with the match list
+    public void buildComboBoxData() {
+        try {
+            data.addAll(matchesAdapter.getMatchesNamesList());
+        } catch (SQLException ex) {
+            displayAlert("ERROR: " + ex.getMessage());
+
+
+        }
+    }
+
+    public void initialize(URL url, ResourceBundle rb) {
+        matchBox.setItems(data);
+    }
+
+
     @FXML
+    // closes the popup when cancel button is pressed
     public void cancel() {
         Stage stage = (Stage) cancelBtn.getScene().getWindow();
         stage.close();
     }
 
     @FXML
+    // saves data to the DB and closes popup
     public void save() {
         try {
             String match = matchBox.getValue().toString();
             String[] matchInfo = matchBox.getValue().toString().split("-");
-            matchesAdapter.setTeamsScore(Integer.parseInt(matchBox.getValue().toString().substring(0,1)), Integer.parseInt(homeTeam.getText()), Integer.parseInt(visitorTeam.getText()));
+            // sets the team score
+            matchesAdapter.setTeamsScore(Integer.parseInt(matchBox.getValue().toString().substring(0, 1)), Integer.parseInt(homeTeam.getText()), Integer.parseInt(visitorTeam.getText()));
 
-            teamsAdapter.setStatus(matchInfo[1].trim(),matchInfo[2].trim(),Integer.parseInt(homeTeam.getText()), Integer.parseInt(visitorTeam.getText()));
-
+            // sets the win/loss
+            teamsAdapter.setStatus(matchInfo[1].trim(), matchInfo[2].trim(), Integer.parseInt(homeTeam.getText()), Integer.parseInt(visitorTeam.getText()));
 
 
         } catch (SQLException ex) {
@@ -70,11 +89,11 @@ public class AddScoreController implements Initializable {
         }
 
 
-
         Stage stage = (Stage) cancelBtn.getScene().getWindow();
         stage.close();
     }
 
+    // popup displaying the error
     private void displayAlert(String msg) {
         try {
 
@@ -94,20 +113,6 @@ public class AddScoreController implements Initializable {
         } catch (IOException ex1) {
 
         }
-    }
-
-    public void buildComboBoxData() {
-        try {
-            data.addAll(matchesAdapter.getMatchesNamesList());
-        } catch (SQLException ex) {
-            displayAlert("ERROR: " + ex.getMessage());
-
-
-        }
-    }
-
-    public void initialize(URL url, ResourceBundle rb) {
-        matchBox.setItems(data);
     }
 
 }

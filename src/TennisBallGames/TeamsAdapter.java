@@ -111,13 +111,14 @@ public class TeamsAdapter {
         Statement stmt = connection.createStatement();
         ResultSet rs;
         
-        // Write your code here for Task #4
 
         String sql = "SELECT * FROM Teams";
         rs = stmt.executeQuery(sql);
 
+        // initialize values
         int hTies = 0, vTies = 0, hWins = 0, vWins = 0, hLosses = 0, vLosses = 0;
 
+        // prints team name and whether or not they win
         while(rs.next()) {
             System.out.println(rs.getString("TeamName"));
             if (rs.getString("TeamName").split(" ")[0].equals(hTeam)) {
@@ -132,6 +133,7 @@ public class TeamsAdapter {
             }
         }
 
+        // check if score is tied and update DB
         if(hScore == vScore) {
             hTies++;
             vTies++;
@@ -140,6 +142,7 @@ public class TeamsAdapter {
             stmt.execute("UPDATE Teams SET Ties = " + vTies + " WHERE TeamName = '" + vTeam + "'");
         }
 
+        // if home team wins and update DB
         else if (hScore > vScore) {
             hWins++;
             vLosses++;
@@ -147,6 +150,7 @@ public class TeamsAdapter {
             stmt.execute("UPDATE Teams SET Losses = " + vLosses + " WHERE TeamName = '" + vTeam + "'");
         }
 
+        // if other team wins and update DB
         else {
             hLosses++;
             vWins++;
