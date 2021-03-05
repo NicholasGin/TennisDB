@@ -112,6 +112,46 @@ public class TeamsAdapter {
         ResultSet rs;
         
         // Write your code here for Task #4
-        
+
+        String sql = "SELECT * FROM Teams";
+        rs = stmt.executeQuery(sql);
+
+        int hTies = 0, vTies = 0, hWins = 0, vWins = 0, hLosses = 0, vLosses = 0;
+
+        while(rs.next()) {
+            System.out.println(rs.getString("TeamName"));
+            if (rs.getString("TeamName").split(" ")[0].equals(hTeam)) {
+                hWins = rs.getInt("Wins");
+                hTies = rs.getInt("Ties");
+                hLosses = rs.getInt("Losses");
+            }
+            if (rs.getString("TeamName").split(" ")[0].equals(vTeam)) {
+                vWins = rs.getInt("Wins");
+                vTies = rs.getInt("Ties");
+                vLosses = rs.getInt("Losses");
+            }
+        }
+
+        if(hScore == vScore) {
+            hTies++;
+            vTies++;
+
+            stmt.execute("UPDATE Teams SET Ties = " + hTies + " WHERE TeamName = '" + hTeam + "'");
+            stmt.execute("UPDATE Teams SET Ties = " + vTies + " WHERE TeamName = '" + vTeam + "'");
+        }
+
+        else if (hScore > vScore) {
+            hWins++;
+            vLosses++;
+            stmt.execute("UPDATE Teams SET Wins = " + hWins + " WHERE TeamName = '" + hTeam + "'");
+            stmt.execute("UPDATE Teams SET Losses = " + vLosses + " WHERE TeamName = '" + vTeam + "'");
+        }
+
+        else {
+            hLosses++;
+            vWins++;
+            stmt.execute("UPDATE Teams SET Losses = " + hLosses + " WHERE TeamName = '" + hTeam + "'");
+            stmt.execute("UPDATE Teams SET Wins = " + vWins + " WHERE TeamName = '" + vTeam + "'");
+        }
     }
 }

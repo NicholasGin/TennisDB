@@ -105,16 +105,20 @@ public class MatchesAdapter {
         ResultSet rs;
         
         // Create a Statement object
-       
+        Statement stmt = connection.createStatement();
 
         // Create a string with a SELECT statement
-         
+        String sql = "SELECT * FROM Matches";
 
         // Execute the statement and return the result
-     
+        rs = stmt.executeQuery(sql);
         
         // Loop the entire rows of rs and set the string values of list
-       
+       while(rs.next()){
+           list.add(new String(rs.getString("MatchNumber") + "-" +
+                   rs.getString("HomeTeam") + "-" + rs.getString("VisitorTeam")));
+
+       }
         
         return list;
     }
@@ -122,6 +126,9 @@ public class MatchesAdapter {
     
     public void setTeamsScore(int matchNumber, int hScore, int vScore) throws SQLException
    {
-        // Add your code here for Task #4
+        Statement stmt = connection.createStatement();
+        String sql = "UPDATE Matches Set HomeTeamScore = " + hScore + ", VisitorTeamScore =" + vScore +
+                " WHERE MatchNumber = " + matchNumber;
+        stmt.executeUpdate(sql);
    }  
 }
